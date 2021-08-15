@@ -35,21 +35,23 @@ def generate_launch_description():
     ld.add_action(gazebo)
     # robot base for each robot
     robot_name = "standard_robot_red1"
-    robot_base =Node(package='rmua19_ignition_simulator', executable='rmua19_robot_base2',
+    robot_base =Node(package='rmua19_ignition_simulator', executable='rmua19_robot_base',
         parameters=[
                 {"world_name": "default"},
                 {"robot_name": robot_name},
         ],output='screen') 
-    robot_ign_bridge = Node(package='ros_ign_bridge',executable='parameter_bridge',
-        arguments=["/world/default/model/%s/link/front_rplidar_a2/sensor/front_rplidar_a2/scan@sensor_msgs/msg/LaserScan[ignition.msgs.LaserScan"%(robot_name),
-            "/%s/odometry@nav_msgs/msg/Odometry[ignition.msgs.Odometry"%(robot_name)
-        ],
-        remappings=[
-            ("/world/default/model/%s/link/front_rplidar_a2/sensor/front_rplidar_a2/scan"%(robot_name),"/scan"),
-            ("/%s/odometry"%(robot_name),"/odom"),
-        ],
-        output='screen'
-    )
     ld.add_action(robot_base)
-    ld.add_action(robot_ign_bridge)
+    # static tf
+    tf1 = Node(package = "tf2_ros", 
+            executable = "static_transform_publisher",
+            name = "static_transform_publisher1",
+            arguments=['0', '0', '0.0758', '0.0', '0.0', '0.0', 'standard_robot_red1/footprint', 'standard_robot_red1/chassis'],
+        )
+    tf2 = Node(package = "tf2_ros", 
+            executable = "static_transform_publisher",
+            name = "static_transform_publisher2",
+            arguments=['0.155', '0', '0.1', '0.0', '0.0', '0.0', 'standard_robot_red1/chassis', 'standard_robot_red1/front_rplidar_a2/front_rplidar_a2'],
+        )
+    ld.add_action(tf1)
+    ld.add_action(tf2)
     return ld

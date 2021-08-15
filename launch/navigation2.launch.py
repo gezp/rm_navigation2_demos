@@ -37,7 +37,7 @@ def generate_launch_description():
         'params_file',
         default=os.path.join(
             get_package_share_directory('rm_navigation2_demos'),
-            'config', 'red1_nav2.yaml'))
+            'config', 'red1_nav.yaml'))
 
     nav2_launch_file_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
 
